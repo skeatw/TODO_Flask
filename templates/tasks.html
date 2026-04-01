@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание задачи</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="name_site">
+        <h1>Список задач</h1>
+    </div>
+    <!-- Панел инструментов -->
+    <div class="toolbar">
+        <img src=" " alt="фото профиля пользователя">
+        <p>Имя пользователя</p>
+    </div>
+
+    <div class="nav nav-pills flex-column mb-auto">
+        <ul class="nav-item">
+            <li class="nav-link text-white"><a href="{{ url_for('tasks') }}">Создать задачу</a></li>
+            <li class="nav-link text-white"><a href="{{ url_for('index') }}">Список задач</a></li>
+            <li class="nav-link text-white"><a href="{{ url_for('statistics') }}">Статистика выполнения</a></li>
+            <li class="nav-link text-white"><a href="{{ url_for('user') }}">Настройки профиля</a></li>
+        </ul>
+    </div>
+    <!-- конеу панели инструментов -->
+    <div class="create_tools">
+        <form>
+            <!-- TODO: Пометить обязательные поля маленькой красной звездочкой-->
+            <label for="name_tools">Название задачи</label>
+            <input type="text" id="name_tools" placeholder="Введите название задачи">
+            <label for="description">Описание задачи</label>
+            <textarea id="description" placeholder="Введите описание вашей задачи"></textarea>
+            <button type="submit">Создать!</button>
+        </form>
+    </div>
+
+</body>
+</html>

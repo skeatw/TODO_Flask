@@ -1,0 +1,15 @@
+#name_site {
+    display: flex;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.create_tools {
+ /** TODO: Разместить панель создания задачи в центре, относительно пустого поля, не трогая меню справа **>
+}
