@@ -8,8 +8,11 @@
 a {
     text-decoration: none;
     color: black;
+
 }
 
-.create_tools {
+
+.create_tools {}
  /** TODO: Разместить панель создания задачи в центре, относительно пустого поля, не трогая меню справа **>
-}
+ 
+  */

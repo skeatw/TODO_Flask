@@ -9,21 +9,23 @@
     <div id="name_site">
         <h1>Список задач</h1>
     </div>
-    <!-- Панел инструментов -->
-    <div class="toolbar">
-        <img src=" " alt="фото профиля пользователя">
-        <p>Имя пользователя</p>
-    </div>
+    <div class="parent">
+        <!-- Панел инструментов -->
+        <div class="toolbar">
+            <img src=" " alt="фото профиля пользователя">
+            <p>Имя пользователя</p>
+        </div>
 
-    <div class="nav nav-pills flex-column mb-auto">
-        <ul class="nav-item">
-            <li class="nav-link text-white"><a href="{{ url_for('tasks') }}">Создать задачу</a></li>
-            <li class="nav-link text-white"><a href="{{ url_for('index') }}">Список задач</a></li>
-            <li class="nav-link text-white"><a href="{{ url_for('statistics') }}">Статистика выполнения</a></li>
-            <li class="nav-link text-white"><a href="{{ url_for('user') }}">Настройки профиля</a></li>
-        </ul>
+        <div class="menu">
+            <ul class="menu-item">
+                <li class="menu-link"><a href="{{ url_for('tasks') }}">Создать задачу</a></li>
+                <li class="menu-link"><a href="{{ url_for('index') }}">Список задач</a></li>
+                <li class="nmenu-link"><a href="{{ url_for('statistics') }}">Статистика выполнения</a></li>
+                <li class="menu-link"><a href="{{ url_for('user') }}">Настройки профиля</a></li>
+            </ul>
+        </div>
+        <!-- конеу панели инструментов -->
     </div>
-    <!-- конеу панели инструментов -->
 
 </body>
 </html>
