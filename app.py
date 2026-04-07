@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import datetime
+
+from db_manager import Manage
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -12,10 +15,10 @@ def tasks():
         title: str = request.form.get('name_tools')
         desc: str = request.form.get('description')
         creation_time: datetime.datetime = datetime.datetime.now()
-        status_tool: bool = False
+        status_task: bool = False
         completion_time: None = None
 
-        return None
+        return redirect('/')
 
     return render_template('tasks.html')
 
@@ -29,4 +32,6 @@ def user():
 
 
 if __name__ == '__main__':
+    manage = Manage()
+    manage.create_connection()
     app.run(debug=True)
