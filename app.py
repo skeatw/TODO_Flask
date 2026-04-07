@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect
-import datetime
-
+from flask import Flask, render_template, request, redirect, make_response
+from datetime import datetime
+import secrets
 from db_manager import Manage
 
 app = Flask(__name__)
@@ -14,9 +14,9 @@ def tasks():
     if request.method == 'POST':
         title: str = request.form.get('name_tools')
         desc: str = request.form.get('description')
-        creation_time: datetime.datetime = datetime.datetime.now()
+        creation_time: datetime = datetime.now()
         status_task: bool = False
-        completion_time: None = None
+        data = [title, desc, creation_time, status_task]
 
         return redirect('/')
 
@@ -29,6 +29,22 @@ def statistics():
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     return render_template('user.html')
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+
+        token = secrets.token_hex(32)
+        response = make_response()
+        response.set_cookie('user', token, max_age=60*60*24*5, httponly=True, secure=True)
+
+        username = request.form.get('username')
+        user_email = request.form.get('email')
+        data = [username, user_email]
+
+        return response
+
+    return render_template('registration.html')
 
 
 if __name__ == '__main__':
