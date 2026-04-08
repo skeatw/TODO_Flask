@@ -1,3 +1,14 @@
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Файлы IDE (о них ниже)
+.idea/
+.vscode/
+*.iml
+
 todo.db
 
 __pycache__/
