@@ -5,6 +5,11 @@ from db_manager import Manage
 
 app = Flask(__name__)
 
+def set_token():
+    token = secrets.token_hex(32)
+    response = make_response(redirect('/'))
+    response.set_cookie('user', token, max_age=60 * 60 * 24 * 5, httponly=True, secure=True)
+    return response
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -34,18 +39,43 @@ def user():
 def registration():
     if request.method == 'POST':
 
-        token = secrets.token_hex(32)
-        response = make_response()
-        response.set_cookie('user', token, max_age=60*60*24*5, httponly=True, secure=True)
+        response = set_token()
+
+        m = Manage()
 
         username = request.form.get('username')
         user_email = request.form.get('email')
         data = [username, user_email]
+        m.add_to_db_user(data)
 
         return response
 
     return render_template('registration.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        m = Manage()
+
+        cookie = request.cookies.get('user')
+
+        username = request.form.get('username')
+        user_email = request.form.get('email')
+
+        if cookie is None:
+
+            response = set_token()
+
+
+            return response
+
+        else:
+            user_email_from_db = m.get_email(username=username)
+            if user_email_from_db == user_email:
+                return redirect('/')
+        #TODO: получить куки пользователя есть время куки не истекло, то сразу перейти в аккаунт, если истекло для пользователя с username должна совпадать отправленная им
+
+    return render_template('login.html')
 
 if __name__ == '__main__':
     manage = Manage()

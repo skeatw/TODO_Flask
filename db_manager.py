@@ -60,3 +60,11 @@ class Manage:
         self.conn.commit()
         cur.close()
 
+    def get_email(self, username: str) -> str:
+        cur = self.conn.cursor()
+        user_email = cur.execute('SELECT email FROM user WHERE username = ?', (username, )).fetchone()[0]
+
+        return user_email
+
+    def get_id_username(self, username):
+        pass
