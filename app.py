@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, make_response
+from flask import Flask, render_template, request, redirect, make_response, jsonify
 from datetime import datetime
 import secrets
 from db_manager import manage
@@ -13,22 +13,59 @@ def set_token(username):
     response.set_cookie('user', token, max_age=60 * 60 * 24 * 5, httponly=True, secure=True)
 
     return response
+
+def time_for_people(tasks):
+    l = []
+    for task in tasks:
+        lst_task = list(task)
+        dt = datetime.strptime(lst_task[3], '%Y-%m-%d %H:%M:%S.%f')
+        dt_for_people =  dt.strftime('%d-%m-%Y %H:%M')
+        lst_task[3] = dt_for_people
+        l.append(lst_task)
+    return l
+
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    username = None
+    tasks = None
+    get_cookie = request.cookies.get('user')
+    if get_cookie is not None:
+        username = manage.get_username_by_token(get_cookie)
+        tasks = manage.get_tasks_by_token(get_cookie)
+    #TODO: изменить формат даты и времени у всех задача
+    if tasks is not None:
+        tasks = time_for_people(tasks)
+
+
+    if username is None:
+        return redirect('user')
+
+    return render_template('index.html', username=username, tasks=tasks)
 
 @app.route('/tasks', methods=['GET', 'POST'])
 def tasks():
     if request.method == 'POST':
+        get_cookie = request.cookies.get('user')
+
+        user_id = manage.get_id_by_token(get_cookie)
         title: str = request.form.get('name_tools')
-        desc: str = request.form.get('description')
+        desc = None
+        if request.form.get('description') != '':
+            desc = request.form.get('description')
+
         creation_time: datetime = datetime.now()
         status_task: bool = False
-        data = [title, desc, creation_time, status_task]
+        data = [title, desc, creation_time, status_task, user_id]
+        manage.add_to_db_task(data)
 
         return redirect('/')
 
-    return render_template('tasks.html')
+    get_cookie = request.cookies.get('user')
+    if get_cookie is not None:
+        username = manage.get_username_by_token(get_cookie)
+
+    return render_template('tasks.html', username=username)
 
 @app.route('/statistics', methods=['GET', 'POST'])
 def statistics():
@@ -58,8 +95,7 @@ def login():
         get_cookie = request.cookies.get('user')
 
         if get_cookie is not None:
-            #TODO: получать по этим куки информацию о пользователе из бд и отдавать их на index.html
-            return redirect('/') # вернуть аккаунта пользователя
+            return redirect('/')
         else:
             return render_template('login.html')
 
@@ -71,6 +107,14 @@ def login():
         return response
     else:
         return render_template('registration.html')
+
+#TODO: Сделать маршрут, который будет "вызываться" при нажатии на кнопку "Завершить задачу" и будет изменять статус задачи в базе данных
+@app.route('/complete/<int:task_id>', methods=['POST'])
+def complete(task_id):
+    manage.complete_task(task_id)
+    return redirect('/')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -27,14 +27,14 @@ class Manage:
             creation_time TIMESTAMP,
             completed_time TIMESTAMP,
             lead_time TIMESTAMP,
-            status BOOL,
+            status BOOLEAN,
             user_id INTEGER,
             FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE)
         ''')
         conn.commit()
         conn.close()
 
-    def add_to_db_task(self, data: list[None | str | datetime | bool]) -> None:
+    def add_to_db_task(self, data: list[None | str | datetime | bool | int]) -> None:
         """
         Добавление в таблицу task информацию о созданной задачи
         :param data: список, в котором находится информация о созданной задачи
@@ -46,7 +46,8 @@ class Manage:
         desc = data[1]
         creation_time = data[2]
         status = data[3]
-        cur.execute('INSERT OR IGNORE INTO tasks (title, description, creation_time, status) VALUES (?, ?, ?, ?)', (title, desc, creation_time, status))
+        user_id = data[4]
+        cur.execute('INSERT OR IGNORE INTO tasks (title, description, creation_time, status, user_id) VALUES (?, ?, ?, ?, ?)', (title, desc, creation_time, status, user_id))
         conn.commit()
         conn.close()
 
@@ -93,9 +94,43 @@ class Manage:
         cur = conn.cursor()
 
         answer = cur.execute('SELECT id FROM user WHERE username = ?', (username, )).fetchone()
+        conn.close()
         if answer is not None:
             return True
         return False
+
+
+    def get_username_by_token(self, token: str) -> str:
+        conn = sqlite3.connect(self.db_path)
+        cur = conn.cursor()
+
+        username = cur.execute('SELECT username FROM user WHERE token = ?', (token, )).fetchone()[0]
+
+        conn.close()
+        return username
+
+    def get_tasks_by_token(self, token: str) -> list:
+        conn = sqlite3.connect(self.db_path)
+        cur = conn.cursor()
+        user = cur.execute('SELECT id FROM user WHERE token = ?', (token, )).fetchone()[0]
+
+        tasks = cur.execute('SELECT * FROM tasks WHERE user_id = ?', (user, )).fetchall()
+
+        conn.close()
+        return tasks
+
+    def complete_task(self, task_id: int) -> None:
+        conn = sqlite3.connect(self.db_path)
+        cur = conn.cursor()
+        creation_time = cur.execute('SELECT creation_time FROM tasks WHERE id = ?', (task_id, )).fetchone()[0]
+        completed_time = datetime.now()
+        creation_time_datetime = datetime.strptime(creation_time, '%d-%m-%Y %H:%M:%S')
+        lead_time = str(completed_time - creation_time_datetime)
+
+
+        cur.execute('UPDATE tasks SET status = 1, lead_time = ? WHERE id = ?', (task_id, lead_time))
+        conn.commit()
+        conn.close()
 
 
 manage = Manage()
