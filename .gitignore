@@ -4,7 +4,7 @@ env/
 .env/
 ENV/
 
-# Файлы IDE (о них ниже)
+
 .idea/
 .vscode/
 *.iml
@@ -13,4 +13,6 @@ todo.db
 
 __pycache__/
 *.py[cod]
-*.pyc
+*.pycs
+
+templates/statistics.html

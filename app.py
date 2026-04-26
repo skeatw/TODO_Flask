@@ -20,6 +20,9 @@ def time_for_people(tasks):
         lst_task = list(task)
         dt = datetime.strptime(lst_task[3], '%Y-%m-%d %H:%M:%S.%f')
         dt_for_people =  dt.strftime('%d-%m-%Y %H:%M')
+        if lst_task[5] is not None:
+            time_people = datetime.strptime(lst_task[5], '%H:%M:%S.%f')
+            lst_task[5] = time_people.strftime('%H:%M:%S')
         lst_task[3] = dt_for_people
         l.append(lst_task)
     return l
@@ -33,13 +36,14 @@ def index():
     if get_cookie is not None:
         username = manage.get_username_by_token(get_cookie)
         tasks = manage.get_tasks_by_token(get_cookie)
-    #TODO: изменить формат даты и времени у всех задача
+
     if tasks is not None:
         tasks = time_for_people(tasks)
 
 
-    if username is None:
+    if username is None or get_cookie is None:
         return redirect('user')
+
 
     return render_template('index.html', username=username, tasks=tasks)
 
@@ -97,7 +101,7 @@ def login():
         if get_cookie is not None:
             return redirect('/')
         else:
-            return render_template('login.html')
+            return redirect('registration')
 
     username = request.form.get('username')
     user_email = request.form.get('email')
@@ -108,7 +112,7 @@ def login():
     else:
         return render_template('registration.html')
 
-#TODO: Сделать маршрут, который будет "вызываться" при нажатии на кнопку "Завершить задачу" и будет изменять статус задачи в базе данных
+
 @app.route('/complete/<int:task_id>', methods=['POST'])
 def complete(task_id):
     manage.complete_task(task_id)

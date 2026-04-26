@@ -1,46 +1,53 @@
+<!-- TODO: Сделать навигацию горизонтальной. Оставить только кнопку "Создать задачу".
+        Кнопка "Создать задачу" будет располагаться справа от края. А на этой же "линии" будет
+        у левого края имя пользователя-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 </head>
 <body>
     <div class="parent">
-        <div class="toolbar">
+        <header>
+        <div class="username">
             <h2 class="user_name">{{ username }}</h2>
         </div>
-        <!-- Панель инструментов -->
         <div class="menu">
             <ul class="menu-item">
-                <li class="menu-link"><a href="{{ url_for('tasks') }}">Создать задачу</a></li>
+                <h3 id="create"><li class="menu-link-crate-tools"><a href="{{ url_for('tasks') }}">Создать задачу</a></li></h3>
                 <li class="menu-link"><a href="{{ url_for('index') }}">Список задач</a></li>
-                <li class="nmenu-link"><a href="{{ url_for('statistics') }}">Статистика выполнения</a></li>
+                <li class="menu-link"><a href="{{ url_for('statistics') }}">Статистика выполнения</a></li>
                 <!-- TODO: user.html сделать формой входа, если время куки истекло, и регистрацией, если пользователя не существует
-                <li class="menu-link"><a href="{{ url_for('user') }}">Настройки профиля</a></li> -->
+                 <li class="menu-link"><a href="{{ url_for('user') }}">Настройки профиля</a></li> -->
             </ul>
         </div>
-                <!-- конец панели инструментов -->
+        </header>
+        <!-- конец панели инструментов -->
 
         <div class="task-container">
             {% for task in tasks %}
             <div class="task">
-                <h3>{{ task[1] }}</h3>
+                <h3 class="task-title">{{ task[1] }}</h3>
                 {% if task[2] is not none %}
-                <p>{{ task[2] }}</p>
+                <p class="task-desc">{{ task[2] }}</p>
                 {% endif %}
-                <p>{{ task[3] }}</p>
+                <p class="task-date">{{ task[3] }}</p>
                 {% if task[6] == 0 %}
-                <form action="/complete/{{ task[0] }}" method="post">
-                    <button type="submit" id="{{ task[0] }}">Завершить задачу</button>
+                <form class="complete-task" action="/complete/{{ task[0] }}" method="post">
+                    <button type="submit" id="{{ task[0] }}" class="complete-task-button">Завершить задачу</button>
                 </form>
                 {% else %}
-                <p>{{ task[5] }}</p>
+                <p class="task-time">{{ task[5] }}</p>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
     </div>
+
 
 </body>
 </html>

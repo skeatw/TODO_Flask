@@ -123,12 +123,12 @@ class Manage:
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
         creation_time = cur.execute('SELECT creation_time FROM tasks WHERE id = ?', (task_id, )).fetchone()[0]
-        completed_time = datetime.now()
-        creation_time_datetime = datetime.strptime(creation_time, '%d-%m-%Y %H:%M:%S')
+        completed_time = datetime.now().replace(microsecond=0)
+        creation_time_datetime = datetime.strptime(creation_time, '%Y-%m-%d %H:%M:%S.%f')
         lead_time = str(completed_time - creation_time_datetime)
 
 
-        cur.execute('UPDATE tasks SET status = 1, lead_time = ? WHERE id = ?', (task_id, lead_time))
+        cur.execute('UPDATE tasks SET status = 1, lead_time = ?, completed_time = ? WHERE id = ?', (lead_time, completed_time, task_id))
         conn.commit()
         conn.close()
 

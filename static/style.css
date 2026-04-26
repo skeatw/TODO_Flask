@@ -1,18 +1,93 @@
-#name_site {
+.username {
+    display: inline-block;
+    padding-left: 5px;
+
+}
+.menu {
+    display: inline-block;
+    border: solid #F6F3FF 5px;
+    background: #F6F3FF;
+    border-radius: 20px;
+    margin-right: 5px;
+}
+
+.menu-link-crate-tools {
+    list-style: none;
+}
+
+.menu-link {
+    display: none;
+}
+
+header {
+    font-family: 'Montserrat';
+    font-size: 14px;
+    border-bottom: #E5E7EB solid 5px;
     display: flex;
-    justify-content: center;
-    font-family: 'Montserrat', sans-serif;
-    margin-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+}
+
+.menu-item {
+    margin-block-start: 5px;
+    margin-block-end: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#create {
+    display: inline-block;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
 a {
     text-decoration: none;
-    color: black;
-
 }
 
+.task {
+    margin-top: 15px;
+    border: #E5E7EB solid 5px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-.create_tools {}
- /** TODO: Разместить панель создания задачи в центре, относительно пустого поля, не трогая меню справа **>
- 
-  */
+.task-title {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.task-desc {
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.task-date {
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.task-time {
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.complete-task {
+    display: inline-block;
+    margin-left: 50px;
+}
+
+.complete-task-button {
+    margin-right: 10px;
+    background: #aa8eff;
+    border-radius: 10px;
+    border: #E5E7EB solid 3px;
+}
+
